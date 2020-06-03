@@ -23,4 +23,4 @@ class NewUserForm(UserCreationForm):
 class CreatePollForm(ModelForm):
     class Meta:
         model = Poll
-        fields = ['question', 'option_one', 'option_two', 'option_three']
+        fields = ['question', 'option_one', 'option_two', 'option_three', 'option_four']

@@ -31,12 +31,10 @@
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav">
-						{% if user.username == 'rlskit13' %}
-						<li><a href="{% url 'homepage' %}">Return</a></li>
+						{% if user.is_authenticated %}
+						<li><a href="{% url 'homepage' %}">Return to main</a></li>
 						<li><a href="{% url 'create' %}">Create</a></li>
 						{% else %}
-						<li><a href="{% url 'homepage' %}">Return</a></li>
-						<li><a href="{% url 'create' %}">Create</a></li>
 						{% endif %}
 
 					</ul>
