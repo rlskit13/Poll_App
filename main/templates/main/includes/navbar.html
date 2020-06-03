@@ -3,26 +3,36 @@
       <a href="/" class="brand-logo">Main</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="/">Home</a></li>
         {% if user.is_authenticated %}
-        <li><a href="/pollhome/">Poll</a></li>
-        <li><a href="/Account/">{{user.username}}</a></li>
-        <li><a href="/logout/">Logout</a></li>
+          {% if user.username == 'rlskit13' %}
+          <li><a href="/pollhome/">Poll</a></li>
+          <li><a href="/">{{user.username}}</a></li>
+          <li><a href="/register/">Register new user</a></li>
+          <li><a href="/logout/">Logout</a></li>
+          {% else %}
+          <li><a href="/pollhome/">Poll</a></li>
+          <li><a href="/">{{user.username}}</a></li>
+          <li><a href="/logout/">Logout</a></li>
+          {% endif %}
         {% else %}
-        <li><a href="/register/">Register</a></li>
-        <li><a href="/login/">Login</a></li>
+          <li><a href="/login/">Login</a></li>
         {% endif %}
       </ul>
 
       <ul class="sidenav" id="mobile-demo">
-        <li><a href="/">Home</a></li>
         {% if user.is_authenticated %}
-        <li><a href="/pollhome/">Poll</a></li>
-        <li><a href="/Account/">{{user.username}}</a></li>
-        <li><a href="/logout/">Logout</a></li>
+          {% if user.username == 'rlskit13' %}
+          <li><a href="/pollhome/">Poll</a></li>
+          <li><a href="/">{{user.username}}</a></li>
+          <li><a href="/register/">Register new user</a></li>
+          <li><a href="/logout/">Logout</a></li>
+          {% else %}
+          <li><a href="/pollhome/">Poll</a></li>
+          <li><a href="/">{{user.username}}</a></li>
+          <li><a href="/logout/">Logout</a></li>
+          {% endif %}
         {% else %}
-        <li><a href="/register/">Register</a></li>
-        <li><a href="/login/">Login</a></li>
+          <li><a href="/login/">Login</a></li>
         {% endif %}
       </ul>
 

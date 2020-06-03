@@ -29,5 +29,6 @@ urlpatterns = [
     path("create/", views.create, name="create"),
     path("vote/<poll_id>", views.vote, name="vote"),
     path("result/<poll_id>", views.result, name="result"),
+    path("submitted/<poll_id>", views.submitted, name="submitted")
 
 ]

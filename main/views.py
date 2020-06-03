@@ -76,7 +76,7 @@ def vote(request, poll_id):
 			return HttpResponse(400, 'Invalid form')
 		poll.save()
 
-		return redirect('result', poll.id)
+		return redirect('submitted', poll.id)
 
 	context = {
         'poll' : poll
@@ -84,10 +84,19 @@ def vote(request, poll_id):
 	return render(request, 'poll/vote.html', context)
 
 def result(request, poll_id):
+	if request.user.is_authenticated:
+		poll = Poll.objects.get(pk=poll_id)
+		context = {'poll':poll}
+		return render(request, 'poll/results.html', context)
+	else:
+		messages.info(request, f"Please login or register new account.")
+		return redirect("main:login_request")
+
+
+def submitted(request, poll_id):
 	poll = Poll.objects.get(pk=poll_id)
 	context = {'poll':poll}
-	return render(request, 'poll/results.html', context)
-
+	return render(request, 'poll/submitted.html', context)
 
 def homepage(request):
 	if request.user.is_authenticated:
@@ -98,6 +107,9 @@ def homepage(request):
 		return redirect("main:login_request")
 
 
+
+
+
 def register(request):
 	if request.method == "POST":
 		form = NewUserForm(request.POST)
@@ -105,15 +117,12 @@ def register(request):
 			user = form.save()
 			username = form.cleaned_data.get('username')
 			messages.success(request, f"New Account Created: {username}")
-			login(request, user)
-			messages.info(request, f"You are now logged in as {username}")
+			#login(request, user)
+			messages.info(request, f"You have registered {username}")
 			return redirect("main:homepage")
 		else:
 			for msg in form.error_messages:
 				messages.error(request, f"{msg}:{form.error_messages[msg]}")
-
-
-
 
 
 	form = NewUserForm
@@ -135,6 +144,7 @@ def login_request(request):
 				login(request, user)
 				messages.info(request, f"You are now logged in as {username}")
 				return redirect("main:homepage")
+				
 			else:
 				messages.error(request, "Invalid username or password")
 
@@ -143,5 +153,5 @@ def login_request(request):
 				messages.error(request, f"{msg}:{form.error_messages[msg]}")
 
 	form = AuthenticationForm()
-	return render(request, "main/login.html", {"form":form})
+	return render(request, "main/login_user.html", {"form":form})
 
