@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from .forms import NewUserForm, CreatePollForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -44,6 +45,7 @@ def pollhome(request):
 		messages.info(request, f"Please login or register new account.")
 		return redirect("main:login_request")
 
+@login_required
 def create(request):
 	if request.user.is_authenticated:
 		form = CreatePollForm()
@@ -61,6 +63,26 @@ def create(request):
 	else:
 		messages.info(request, f"Please login or register new account.")
 		return redirect("main:login_request")
+
+@login_required
+def delete(request):
+	if request.user.is_authenticated:
+		form = CreatePollForm()
+		context = {'form' : form}
+		#context = {}
+		if request.method == 'POST':
+			form = CreatePollForm(request.POST)
+			if form.is_valid():
+				form.save()
+				return redirect('pollhome')
+			else:
+				form = CreatePollForm()
+			context = {'form' : form}
+		return render(request, 'poll/create.html', context)
+	else:
+		messages.info(request, f"Please login or register new account.")
+		return redirect("main:login_request")
+
 
 def vote(request, poll_id):
 	poll = Poll.objects.get(pk=poll_id)
@@ -83,6 +105,7 @@ def vote(request, poll_id):
     }
 	return render(request, 'poll/vote.html', context)
 
+@login_required
 def result(request, poll_id):
 	if request.user.is_authenticated:
 		poll = Poll.objects.get(pk=poll_id)
@@ -98,18 +121,17 @@ def submitted(request, poll_id):
 	context = {'poll':poll}
 	return render(request, 'poll/submitted.html', context)
 
+
 def homepage(request):
 	if request.user.is_authenticated:
 		return render(request=request, template_name='main/categories.html', 
 			context={"categories": TutorialCategory.objects.all})
 	else:
-		messages.info(request, f"Please login or register new account.")
+		#messages.info(request, f"Please login or register new account.")
+		messages.info(request, f"Please login.")
 		return redirect("main:login_request")
 
-
-
-
-
+@login_required
 def register(request):
 	if request.method == "POST":
 		form = NewUserForm(request.POST)

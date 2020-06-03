@@ -1,4 +1,4 @@
-{% extends "poll/base.html" %}
+{% extends "poll/base_voter.html" %}
 
 {% block title %}Homepage{% endblock %}
 
@@ -16,9 +16,7 @@
                     <strong>{{ poll.question }}</strong>
                     <span class="pull-right">
                         <a href="{% url 'vote' poll.id %}" class="btn btn-info btn-xs">Vote</a> &nbsp;
-                        <a href="{% url 'result' poll.id %}" class="btn btn-default btn-xs">Share</a> &nbsp;
-                        <a href="{% url 'delete' poll.id %}" class="btn btn-default btn-xs">Delete</a> &nbsp;
-                        <a href="{% url 'result' poll.id %}" class="btn btn-default btn-xs">View Results</a> &nbsp;
+                        
                     </span>
                 </li>
                 {% endfor %}

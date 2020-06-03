@@ -1,16 +1,18 @@
 #Session model stores the session data
 from django.contrib.sessions.models import Session
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .views import logout_request
+#from django.shortcuts import render, redirect
+#from .views import logout_request
+#from .models import LoggedInUser
+
 
 class OneSessionPerUserMiddleware:
     # Called only once when the web server starts
     def __init__(self, get_response):
         self.get_response = get_response
 
+
     def __call__(self, request):
-        # Code to be executed for each request before
+    	# Code to be executed for each request before
         # the view (and later middleware) are called.
         if request.user.is_authenticated:
             stored_session_key = request.user.logged_in_user.session_key
@@ -19,9 +21,7 @@ class OneSessionPerUserMiddleware:
             # different from the current session, delete the stored_session_key
             # session_key with from the Session table
             if stored_session_key and stored_session_key != request.session.session_key:
-            	messages.info(request, f"You have already logged in as {request.user.username} in other machine. Would you like to login in here?")
-            	#logout_request(request)
-            	#Session.objects.get(session_key=stored_session_key).delete()
+                Session.objects.get(session_key=stored_session_key).delete()
 
             request.user.logged_in_user.session_key = request.session.session_key
             request.user.logged_in_user.save()
@@ -33,3 +33,28 @@ class OneSessionPerUserMiddleware:
         # For this tutorial, we're not adding any code so we just return the response
 
         return response
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+        #if request.user.is_authenticated:
+        #    session_key = request.session.session_key
+
+        #    try:
+        #	    logged_in_user = request.user.logged_in_user
+        #	    stored_session_key = logged_in_user.session_key
+        #	    if request.user.is_authenticated:
+        #	        session_key = request.session.session_key        
+        #	        if stored_session_key and stored_session_key != request.session.session_key:
+        #	    	    messages.info(request, f"You have already logged in as {request.user.username} in other machine. Would you like to login in here?")
+        #	    	    Session.objects.get(session_key=stored_session_key).delete()
+        #	        request.user.logged_in_user.session_key = request.session.session_key
+        #	        request.user.logged_in_user.save()
+
+        #    except LoggedInUser.DoesNotExist:
+        #	    LoggedInUser.objects.create(user=request.user, session_key=session_key)
+        #	    stored_session_key = request.user.logged_in_user.session_key
+        #	    if stored_session_key and stored_session_key != request.session.session_key:
+        #		    Session.objects.get(session_key=stored_session_key).delete()
+        #		    request.user.logged_in_user.session_key = request.session.session_key
+        #		    request.user.logged_in_user.save()
+        #	    response = self.get_response(request)
+        #	    return response
